@@ -16,5 +16,13 @@ pipeline {
         build 'docker'
       }
     }
+    stage('xxx') {
+      steps {
+        dockerNode(image: 'debian') {
+          sh 'cat /etc/*version*'
+        }
+        
+      }
+    }
   }
 }
