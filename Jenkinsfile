@@ -11,14 +11,9 @@ pipeline {
         git 'https://github.com/docker/dockercloud-hello-world.git'
       }
     }
-    stage('Build docker image') {
+    stage('Build/push docker hub') {
       steps {
-        sh 'docker build --tag docker.io/gigi206/test:latest --label org.label-schema.name="hello_world" --file Dockerfile .'
-      }
-    }
-    stage('Push image') {
-      steps {
-        sh 'docker push docker.io/gigi206/test'
+        build 'docker'
       }
     }
   }
