@@ -13,7 +13,7 @@ pipeline {
     }
     stage('Build docker image') {
       steps {
-        sh 'build --tag docker.io/gigi206/test:latest --label org.label-schema.name="hello_world" --file Dockerfile .'
+        sh 'docker build --tag docker.io/gigi206/test:latest --label org.label-schema.name="hello_world" --file Dockerfile .'
       }
     }
     stage('Push image') {
