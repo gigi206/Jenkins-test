@@ -1,11 +1,12 @@
-   properties([
-     parameters([
-       string(
+properties([
+   parameters([
+      string(
          defaultValue: 'v8.0.0800',
          description: 'Force la version de build à v8.0.0800',
          name: 'BRANCH_NAME'
-       )
-   ])
+      )
+   ]
+])
 
 
 currentBuild.displayName = 'FAILED'
