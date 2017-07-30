@@ -18,7 +18,7 @@ node('gigix-jenkins-jenkins-slave') {
         echo "Build Version : ${VERSION}"
 
         checkout([$class: 'GitSCM',
-            branches: [[name: 'master']],
+            branches: [[name: "${VERSION}"]],
             doGenerateSubmoduleConfigurations: false,
             extensions: [[$class: 'LocalBranch']],
             submoduleCfg: [],
