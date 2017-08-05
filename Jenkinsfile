@@ -52,7 +52,7 @@ volumes: [emptyDirVolume(memory: false, mountPath: '/var/lib/docker')]) {
       }
 
       stage('Configure Build') {
-        sh "./configure --prefix=${workspace}/${VERSION} --with-features=huge --enable-multibyte --enable-rubyinterp=yes --enable-pythoninterp=yes --with-python-config-dir=/usr/lib/python2.7/config --enable-python3interp=yes --with-python3-config-dir=/usr/lib/python3.5/config --enable-perlinterp=yes --enable-luainterp=yes --enable-gui=gtk2 --enable-cscope"
+        sh "./configure --prefix=\"${workspace}/${VERSION}\" --with-features=huge --enable-multibyte --enable-rubyinterp=yes --enable-pythoninterp=yes --with-python-config-dir=/usr/lib/python2.7/config --enable-python3interp=yes --with-python3-config-dir=/usr/lib/python3.5/config --enable-perlinterp=yes --enable-luainterp=yes --enable-gui=gtk2 --enable-cscope"
       }
 
       stage('Install') {
@@ -70,8 +70,8 @@ volumes: [emptyDirVolume(memory: false, mountPath: '/var/lib/docker')]) {
       }"""
 
       stage('Upload Artifact') {
-        sh 'ls -l'
-        sh "cd ${VERSION} && tar czf ${VERSION}.tar.gz * && mv ${VERSION}.tar.gz .."
+        sh 'pwd'
+        sh "cd \"${workspace}/${VERSION}\" && tar czf ${VERSION}.tar.gz * && mv ${VERSION}.tar.gz .."
         //archiveArtifacts artifacts: "${VERSION}.tar.gz", excludes: ''
 
         //def server = Artifactory.newServer url: 'http://nginx/artifactory', username: 'admin', password: 'xxxxxxxxxxxxxxxx'
