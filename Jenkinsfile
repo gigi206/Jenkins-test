@@ -70,7 +70,6 @@ volumes: [emptyDirVolume(memory: false, mountPath: '/var/lib/docker')]) {
       }"""
 
       stage('Upload Artifact') {
-        sh 'pwd'
         sh "cd \"${workspace}/${VERSION}\" && tar czf ${VERSION}.tar.gz * && mv ${VERSION}.tar.gz .."
         //archiveArtifacts artifacts: "${VERSION}.tar.gz", excludes: ''
 
