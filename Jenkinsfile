@@ -1,9 +1,8 @@
 properties([
   parameters([
     string(
-      //defaultValue: 'v8.0.0800',
       defaultValue: '',
-      description: 'Force la version de build',
+      description: 'Force la version de build à une branche, révision ou tag. Ex : v8.0.0800',
       name: 'BRANCH_NAME'
     )
   ])
@@ -71,6 +70,7 @@ volumes: [emptyDirVolume(memory: false, mountPath: '/var/lib/docker')]) {
       }"""
 
       stage('Upload Artifact') {
+        sh 'ls -l'
         sh "cd ${VERSION} && tar czf ${VERSION}.tar.gz * && mv ${VERSION}.tar.gz .."
         //archiveArtifacts artifacts: "${VERSION}.tar.gz", excludes: ''
 
