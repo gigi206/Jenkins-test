@@ -28,12 +28,14 @@ volumes: [emptyDirVolume(memory: false, mountPath: '/var/lib/docker')]) {
         sh 'apt-get install -y libncurses5-dev libgnome2-dev libgnomeui-dev libgtk2.0-dev libatk1.0-dev libbonoboui2-dev libcairo2-dev libx11-dev libxpm-dev libxt-dev python-dev python3-dev ruby-dev lua5.1 lua5.1-dev libperl-dev git'
       }
 
+      VIM_REPOSITORY='https://github.com/vim/vim.git'
+
       stage ('Téléchargement des sources Github') {
         if (params.BRANCH_NAME != '') {
           VERSION = params.BRANCH_NAME
         }
         else {
-          VERSION = sh(returnStdout: true, script: 'git ls-remote --tags https://github.com/vim/vim.git | tail -1 | awk -F\'/\' \'{ print $NF }\'').trim()
+          VERSION = sh(returnStdout: true, script: "git ls-remote --tags ${VIM_REPOSITORY} | tail -1 | awk -F'/' '{ print \$NF }'").trim()
         }
 
         echo "Build Version : ${VERSION}"
@@ -45,13 +47,13 @@ volumes: [emptyDirVolume(memory: false, mountPath: '/var/lib/docker')]) {
           submoduleCfg: [],
           userRemoteConfigs: [[
             //credentialsId: 'gigi206',
-            url: 'https://github.com/vim/vim.git'
+            url: "${VIM_REPOSITORY}"
           ]]
         ])
       }
 
       stage('Configure Build') {
-        sh "./configure --prefix=`pwd`/${VERSION} --with-features=huge --enable-multibyte --enable-rubyinterp=yes --enable-pythoninterp=yes --with-python-config-dir=/usr/lib/python2.7/config --enable-python3interp=yes --with-python3-config-dir=/usr/lib/python3.5/config --enable-perlinterp=yes --enable-luainterp=yes --enable-gui=gtk2 --enable-cscope"
+        sh "./configure --prefix=${workspace}/${VERSION} --with-features=huge --enable-multibyte --enable-rubyinterp=yes --enable-pythoninterp=yes --with-python-config-dir=/usr/lib/python2.7/config --enable-python3interp=yes --with-python3-config-dir=/usr/lib/python3.5/config --enable-perlinterp=yes --enable-luainterp=yes --enable-gui=gtk2 --enable-cscope"
       }
 
       stage('Install') {
@@ -68,7 +70,7 @@ volumes: [emptyDirVolume(memory: false, mountPath: '/var/lib/docker')]) {
        ]
       }"""
 
-      stage('Upload Artifactory') {
+      stage('Upload Artifact') {
         sh "cd ${VERSION} && tar czf ${VERSION}.tar.gz * && mv ${VERSION}.tar.gz .."
         //archiveArtifacts artifacts: "${VERSION}.tar.gz", excludes: ''
 
@@ -131,9 +133,9 @@ volumes: [emptyDirVolume(memory: false, mountPath: '/var/lib/docker')]) {
     maintainer_name = 'gigi206'
     container_name = 'vim-test'
 
-    //stage('Download Dockerfile') {
-    //  git url: 'https://github.com/gigi206/Jenkins-test.git'
-    //}
+    stage('Download Dockerfile') {
+      git url: 'https://github.com/gigi206/Jenkins-test.git'
+    }
 
     def downloadSpec = """{
      "files": [
